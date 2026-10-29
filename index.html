@@ -20,7 +20,7 @@ h1{font:400 clamp(28px,6vw,56px)/1 "Racing Sans One",Impact,"Arial Black",sans-s
 .when b{font:400 20px "Racing Sans One",Impact,sans-serif;letter-spacing:.04em}
 .sub{color:var(--tx);opacity:.8;font-size:13px}
 .wrap{margin:0 12px 24px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow-x:auto;max-height:72vh;box-shadow:0 6px 24px rgba(0,40,80,.25)}
-table{border-collapse:separate;border-spacing:0;width:100%;min-width:960px}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:1250px}
 th{position:sticky;top:0;background:var(--card);z-index:2;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);padding:10px 8px;border-bottom:1px solid var(--line)}
 td{padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
 tr:last-child td{border-bottom:0}
@@ -28,7 +28,7 @@ tr:last-child td{border-bottom:0}
 tr.top1 .rank{color:var(--acc)}
 input.name{width:100%;min-width:150px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:transparent;color:inherit;font:inherit}
 input.name:focus{outline:2px solid var(--acc);outline-offset:-1px}
-.cell{display:flex;align-items:center;gap:4px;min-width:140px}
+.cell{display:flex;align-items:center;gap:4px;min-width:200px}
 button{font:inherit;cursor:pointer;border-radius:7px;border:1px solid var(--line);background:transparent;color:inherit;padding:6px 10px}
 button:hover{border-color:var(--mut)}
 .b{width:100%;font-variant-numeric:tabular-nums}
@@ -42,6 +42,17 @@ button:hover{border-color:var(--mut)}
 .tools{display:flex;gap:8px;flex-wrap:wrap}
 .tools button{background:var(--card)}
 .cf{display:flex;gap:4px;width:100%}
+.dnf{padding:6px 7px;font-size:11px;font-weight:700;color:var(--mut);font-family:Orbitron,system-ui,sans-serif}
+.tm.isdnf{color:var(--mut);font-style:italic}
+.tm.isedit::after{content:"*";margin-left:2px}
+.cfg{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:4px 10px;font:700 12px Orbitron,system-ui,sans-serif}
+.cfg select{font:inherit;border:0;background:transparent;color:inherit;cursor:pointer}
+#edbox{display:none;position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px}
+#edbox.open{display:flex}
+#edbox .p{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;width:min(440px,100%)}
+#edbox p{margin:6px 0 10px}
+#edin{width:100%;margin:0 0 10px;padding:10px;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;font:700 20px Orbitron,system-ui,sans-serif;text-align:center}
+#edbox .tools{margin-bottom:10px}
 .cf button{flex:1;font-size:12px;padding:6px 4px}
 .yes{background:#c62828!important;border-color:#c62828!important;color:#fff!important}
 .yes:disabled{opacity:.4;cursor:not-allowed}
@@ -60,50 +71,121 @@ tr.top1 td{background:rgba(255,228,92,.28)}
 #csvbox.open{display:flex}
 #csvbox .p{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;width:min(720px,100%)}
 #csvbox textarea{width:100%;height:50vh;margin:10px 0;background:transparent;color:inherit;border:1px solid var(--line);border-radius:8px;padding:8px;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace}
-@media print{.tools,.x,.b.start,#csvbox{display:none!important}.wrap{max-height:none;overflow:visible;border:0}th{position:static}input.name{border:0;padding:0}body{background:#fff;color:#000}}
+@media print{.tools,.x,.dnf,.b.start,#csvbox,#rstbox{display:none!important}.wrap{max-height:none;overflow:visible;border:0}th{position:static}input.name{border:0;padding:0}body{background:#fff;color:#000}}
+</style>
+<style>
+body{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.by{margin-top:6px;font:500 11px Orbitron,system-ui,sans-serif;color:var(--mut)}
+.by a{color:inherit;font-weight:700;text-decoration:underline}
+.cfg input{width:56px;font:inherit;border:0;border-bottom:1px solid var(--line);background:transparent;color:inherit;text-align:center}
+.cfg.wide input{width:min(260px,60vw);text-align:left}
+.cfg input[type=date]{width:auto}
+.setup{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+#psum{display:none}
+@media print{
+ #psum{display:block;margin:10px 12px;color:#000}
+ #pname{font:800 22px Orbitron,system-ui,sans-serif}
+ #pdate,#ptime{font:500 13px Orbitron,system-ui,sans-serif}
+ .setup,.hd .sub,.when,.kick{display:none!important}
+ h1{font-size:20px;text-shadow:none;margin:4px 0}
+ header{padding:6px 12px}
+ .wrap{box-shadow:none}
+ table{min-width:0!important}
+ tr.empty{display:none}
+ td{padding:3px 5px}
+ .cell{min-width:0}
+ .tm{font-size:11px}
+ th{font-size:10px}
+}
+@media screen and (max-width:1100px){
+ header{padding:12px 14px}
+ .wrap{max-height:none;overflow:visible;background:transparent;border:0;box-shadow:none;margin:0 10px 14px}
+ table{min-width:0!important;display:block}
+ thead{display:none}
+ tbody{display:block}
+ tr{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px;background:var(--card);border-radius:12px;padding:10px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,40,80,.18)}
+ tr.top1{box-shadow:0 0 0 3px #ffe45c,0 2px 10px rgba(0,40,80,.18)}
+ td,tr.top1 td{display:block;padding:0;border:0;background:none;min-width:0}
+ .rank{grid-column:span 1;order:0;align-self:center;font-size:16px;width:auto}
+ .nm{grid-column:span 9;order:1}
+ .bestc{grid-column:span 2;order:2;text-align:right;align-self:center}
+ td[data-l]{grid-column:span 4;order:3}
+ .bestc::before,td[data-l]::before{display:block;font:400 10px Orbitron,system-ui,sans-serif;color:var(--mut);text-transform:uppercase;margin-bottom:2px}
+ .bestc::before{content:"Parim"}
+ td[data-l]::before{content:attr(data-l)}
+ .cell{min-width:0}
+ button{min-height:44px}
+ .x{min-width:32px;padding:0}
+ .tm{min-width:0;padding:4px 2px;font-size:12px;text-align:center}
+ input.name{min-width:0;min-height:44px;font-size:16px}
+ select,input{font-size:16px}
+ #edin{font-size:22px}
+ #edbox .p,#rstbox .p,#csvbox .p{max-height:90vh;overflow:auto}
+ .tools{flex-wrap:wrap}
+}
+@media screen and (max-width:640px){
+ .rank{grid-column:span 2}
+ .nm{grid-column:span 10}
+ .bestc{grid-column:span 12;text-align:left;display:flex;gap:8px;align-items:baseline}
+ .bestc::before{margin:0}
+ td[data-l]{grid-column:span 6}
+ header{flex-direction:column;align-items:stretch}
+ .tools{width:100%}
+ .tools button,.cfg{flex:1 1 auto;justify-content:center}
+ #edbox,#rstbox,#csvbox{align-items:flex-start;padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+}
 </style>
 </head>
 <body>
 <div class="chk"></div>
 <header>
-  <div class="hd"><div class="kick">Osale noorte festivalil</div><h1>Vormel 1<br>mikromootoriga sõidukid</h1><div class="when">toimub <b>29.10.2026</b> Tallinna Tehnikakõrgkoolis</div><div class="sub">Ajavõtt · 40 võistkonda · 5 katset · Loomine, ehitamine, võistlemine!</div></div>
-  <div class="tools"><button id="csv">Ekspordi CSV</button><button id="print">Prindi</button><button class="reset" id="reset">Nulli kõik</button></div>
+  <div class="hd"><div class="kick">Osale noorte festivalil</div><h1>Vormel 1<br>mikromootoriga sõidukid</h1><div class="sub">Ajavõtt · <span id="ncount">40</span> võistlejat · Loomine, ehitamine, võistlemine!</div><div class="sub" id="cfgmsg" style="font-weight:700"></div><div class="setup"><label class="cfg wide">Võistluse nimi: <input id="evname" type="text" maxlength="80" placeholder="nt Kevadvoor"></label><label class="cfg">Kuupäev: <input id="evdate" type="date"></label></div></div>
+  <div class="tools"><label class="cfg">Võistlejaid: <input id="ncount-in" type="number" min="1" max="100" inputmode="numeric"></label><label class="cfg">Sõite võistlejal: <select id="acount"></select></label><button id="csv">Ekspordi CSV</button><button id="print">Prindi</button><button class="reset" id="reset">Nulli kõik</button></div>
 </header>
+<div id="psum"><div id="pname"></div><div id="pdate"></div><div id="ptime"></div></div>
 <div class="wrap"><table>
-<thead><tr><th>#</th><th>Võistkond</th><th>Katse 1</th><th>Katse 2</th><th>Katse 3</th><th>Katse 4</th><th>Katse 5</th><th>Parim</th></tr></thead>
+<thead><tr id="hdr"></tr></thead>
 <tbody id="tb"></tbody></table></div>
-<div class="foot">Projekt „Insenerikarjäär algab huvist“ · Eesti Tehnoloogiakasvatuse Liit · tehnoloogia.ee/fni5</div>
+<div class="foot">Projekt „Insenerikarjäär algab huvist“ · Eesti Tehnoloogiakasvatuse Liit · tehnoloogia.ee/fni5<div class="by">Arendaja: <a href="https://yrgel.com" target="_blank" rel="noopener">Yrgel.com</a></div></div>
 <div class="chk"></div>
+<div id="edbox"><div class="p"><strong id="edtitle"></strong><p class="sub" id="edorig"></p><input id="edin" autocomplete="off" inputmode="decimal" placeholder="0:00.000"><div class="tools"><button data-d="-1000">−1 s</button><button data-d="-100">−0,10</button><button data-d="-10">−0,01</button><button data-d="10">+0,01</button><button data-d="100">+0,10</button><button data-d="1000">+1 s</button></div><div class="tools"><button id="edok">Salvesta</button><button id="edrev">Taasta algne</button><button id="edno">Tühista</button></div></div></div>
 <div id="rstbox"><div class="p"><strong>Nulli kõik andmed?</strong><p id="rstinfo" class="sub"></p><p>See kustutab kõik võistkondade nimed ja kõik ajad. Tegevust ei saa tagasi võtta.</p><div class="tools"><button id="rstcsv">Ekspordi CSV enne</button></div><label class="sub" for="rstin">Kinnitamiseks kirjuta NULLI</label><input id="rstin" autocomplete="off" placeholder="NULLI"><div class="tools"><button id="rstok" class="yes" disabled>Nulli kõik</button><button id="rstno">Tühista</button></div></div></div>
 <div id="csvbox"><div class="p"><strong>CSV eksport</strong><div class="sub">Kopeeri ja kleebi Excelisse või Google Sheetsi (sorteeritud parima aja järgi)</div><textarea id="csvtxt" readonly></textarea><div class="tools"><button id="csvcopy">Kopeeri</button><button id="csvclose">Sulge</button></div></div></div>
 <script>
-var N=40,A=5,KEY="ajavott-v1";
+var N=40,MAXN=100,A=5,MAXA=10,KEY="ajavott-v1",AKEY="ajavott-v1-a",NKEY="ajavott-v1-n";
+function blank(){var a=[];for(var j=0;j<MAXA;j++)a.push(null);return a;}
 var rows=[],running={},confirming={};
-for(var i=0;i<N;i++)rows.push({id:i,name:"",t:[null,null,null,null,null]});
-try{var s=localStorage.getItem(KEY);if(s){var d=JSON.parse(s);if(Array.isArray(d)&&d.length===N)rows=d;}}catch(e){}
+for(var i=0;i<MAXN;i++)rows.push({id:i,name:"",t:blank()});
+try{var s=localStorage.getItem(KEY);if(s){var d=JSON.parse(s);if(Array.isArray(d)&&d.length>=1&&d.length<=MAXN){for(var q=0;q<d.length;q++)rows[q]=d[q];}}var sn=parseInt(localStorage.getItem(NKEY),10);if(sn>=1&&sn<=MAXN)N=sn;var sa=parseInt(localStorage.getItem(AKEY),10);if(sa>=1&&sa<=MAXA)A=sa;}catch(e){}
+rows.forEach(function(r){while(r.t.length<MAXA)r.t.push(null);if(r.o)while(r.o.length<MAXA)r.o.push(null);});
 function save(){try{localStorage.setItem(KEY,JSON.stringify(rows));}catch(e){}}
-function fmt(ms){var m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000),r=Math.floor(ms%1000);
+function fmt(ms){if(ms<0)return "DNF";var m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000),r=Math.floor(ms%1000);
 return m+":"+String(s).padStart(2,"0")+"."+String(r).padStart(3,"0");}
-function best(r){var v=r.t.filter(function(x){return x!==null;});return v.length?Math.min.apply(null,v):null;}
+function best(r){var v=r.t.slice(0,A).filter(function(x){return x!==null&&x>0;});return v.length?Math.min.apply(null,v):null;}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
 function render(){
-  var sorted=rows.slice().sort(function(a,b){var x=best(a),y=best(b);
+  var sorted=rows.slice(0,N).sort(function(a,b){var x=best(a),y=best(b);
     if(x===null&&y===null)return a.id-b.id;if(x===null)return 1;if(y===null)return -1;return x-y||a.id-b.id;});
   var h="";
   sorted.forEach(function(r,n){
     var b=best(r);
-    h+='<tr data-id="'+r.id+'"'+(n===0&&b!==null?' class="top1"':'')+'><td class="rank">'+(n+1)+'</td>'+
-    '<td><input class="name" value="'+esc(r.name)+'" placeholder="Võistkond '+(r.id+1)+'" maxlength="40"></td>';
+    h+='<tr data-id="'+r.id+'"'+' class="'+(n===0&&b!==null?'top1 ':'')+(!r.name&&r.t.slice(0,A).every(function(x){return x===null;})?'empty':'')+'"'+'><td class="rank">'+(n+1)+'</td>'+
+    '<td class="nm"><input class="name" value="'+esc(r.name)+'" placeholder="Võistkond '+(r.id+1)+'" maxlength="40"></td>';
     for(var i=0;i<A;i++){
       var k=r.id+"-"+i,c="";
-      if(running[k])c='<button class="b run" data-act="stop" data-i="'+i+'"><span data-key="'+k+'">0:00.000</span> ■</button>';
+      if(running[k]&&confirming[k])c='<div class="cf"><button class="yes" data-act="dnfok" data-i="'+i+'">DNF?</button><button data-act="dnfno" data-i="'+i+'">Ei</button></div>';
+      else if(running[k])c='<button class="b run" data-act="stop" data-i="'+i+'"><span data-key="'+k+'">0:00.000</span> ■</button><button class="dnf" data-act="dnf" data-i="'+i+'" title="Katkestas, ei jõudnud finishisse">DNF</button>';
       else if(confirming[k])c='<div class="cf"><button class="yes" data-act="clrok" data-i="'+i+'">Kustuta?</button><button data-act="clrno" data-i="'+i+'">Ei</button></div>';
-      else if(r.t[i]!==null)c='<span class="tm'+(r.t[i]===b?' isbest':'')+'">'+fmt(r.t[i])+'</span><button class="x" data-act="clr" data-i="'+i+'" title="Kustuta">×</button>';
-      else c='<button class="b start" data-act="start" data-i="'+i+'">▶ Start</button>';
-      h+='<td><div class="cell">'+c+'</div></td>';
+      else if(r.t[i]!==null)c='<span class="tm'+(r.t[i]===b?' isbest':'')+(r.t[i]<0?' isdnf':'')+(r.o&&r.o[i]!=null?' isedit':'')+'"'+(r.o&&r.o[i]!=null?' title="Algne aeg: '+fmt(r.o[i])+'"':'')+'>'+fmt(r.t[i])+'</span>'+(r.t[i]>0?'<button class="x" data-act="edit" data-i="'+i+'" title="Korrigeeri aega">✎</button>':'')+'<button class="x" data-act="clr" data-i="'+i+'" title="Kustuta">×</button>';
+      else c='<button class="b start" data-act="start" data-i="'+i+'">▶ Start</button><button class="dnf" data-act="dnfnow" data-i="'+i+'" title="Markeeri DNF">DNF</button>';
+      h+='<td data-l="Katse '+(i+1)+'"><div class="cell">'+c+'</div></td>';
     }
-    h+='<td class="bestc">'+(b!==null?fmt(b):"–")+'</td></tr>';
+    h+='<td class="bestc">'+(b!==null?fmt(b):(r.t.slice(0,A).indexOf(-1)>-1?"DNF":"–"))+'</td></tr>';
   });
+  var hh='<th>#</th><th>Võistkond</th>';for(var j=0;j<A;j++)hh+='<th>Katse '+(j+1)+'</th>';
+  document.getElementById("hdr").innerHTML=hh+'<th>Parim</th>';
+  document.querySelector("table").style.minWidth=(330+A*190)+"px";
+  document.getElementById("ncount").textContent=N;
   var ae=document.activeElement,fid=null,fs=0;
   if(ae&&ae.classList&&ae.classList.contains("name")){fid=ae.closest("tr").dataset.id;fs=ae.selectionStart;}
   document.getElementById("tb").innerHTML=h;
@@ -116,8 +198,13 @@ tb.addEventListener("click",function(e){
   if(act==="start"){running[k]=Date.now();render();}
   else if(act==="stop"){rows[id].t[i]=Date.now()-running[k];delete running[k];save();render();}
   else if(act==="clr"){confirming[k]=true;render();setTimeout(function(){if(confirming[k]){delete confirming[k];render();}},4000);}
-  else if(act==="clrok"){delete confirming[k];rows[id].t[i]=null;save();render();}
+  else if(act==="clrok"){delete confirming[k];rows[id].t[i]=null;if(rows[id].o)rows[id].o[i]=null;save();render();}
   else if(act==="clrno"){delete confirming[k];render();}
+  else if(act==="dnf"){confirming[k]=true;render();setTimeout(function(){if(confirming[k]){delete confirming[k];render();}},4000);}
+  else if(act==="dnfok"){delete confirming[k];delete running[k];rows[id].t[i]=-1;save();render();}
+  else if(act==="dnfno"){delete confirming[k];render();}
+  else if(act==="dnfnow"){rows[id].t[i]=-1;save();render();}
+  else if(act==="edit"){openEd(id,i);}
 });
 tb.addEventListener("input",function(e){
   if(!e.target.classList.contains("name"))return;
@@ -136,17 +223,39 @@ rb.addEventListener("click",function(){
 rin.addEventListener("input",function(){rok.disabled=rin.value.trim().toUpperCase()!=="NULLI";});
 rok.addEventListener("click",function(){
   if(rok.disabled)return;
-  rows.forEach(function(r){r.name="";r.t=[null,null,null,null,null];});running={};confirming={};save();render();closeR();
+  rows.forEach(function(r){r.name="";r.t=blank();r.o=null;});running={};confirming={};save();render();closeR();
 });
 document.getElementById("rstno").addEventListener("click",closeR);
 document.getElementById("rstcsv").addEventListener("click",function(){closeR();document.getElementById("csv").click();});
-document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeR();document.getElementById("csvbox").classList.remove("open");}});
-function sortedRows(){return rows.slice().sort(function(a,b){var x=best(a),y=best(b);if(x===null&&y===null)return a.id-b.id;if(x===null)return 1;if(y===null)return -1;return x-y||a.id-b.id;});}
+var edbox=document.getElementById("edbox"),edin=document.getElementById("edin"),edId=null,edI=null;
+function parseT(s){s=String(s).trim().replace(",",".");if(!s)return null;var m=0,p=s.split(":");
+  if(p.length>2)return null;var sec=parseFloat(p[p.length-1]);if(isNaN(sec))return null;
+  if(p.length===2){m=parseInt(p[0],10);if(isNaN(m))return null;}
+  var ms=Math.round(m*60000+sec*1000);return ms>0?ms:null;}
+function openEd(id,i){edId=id;edI=i;var r=rows[id],has=r.o&&r.o[i]!=null;
+  document.getElementById("edtitle").textContent=(r.name||"Võistkond "+(id+1))+" · katse "+(i+1);
+  document.getElementById("edorig").textContent=(has?"Algne mõõdetud aeg: "+fmt(r.o[i]):"Mõõdetud aeg: "+fmt(r.t[i]))+" · formaat m:ss.mmm";
+  document.getElementById("edrev").style.display=has?"":"none";
+  edin.style.outline="";edin.value=fmt(r.t[i]);edbox.classList.add("open");edin.focus();edin.select();}
+function closeEd(){edbox.classList.remove("open");}
+document.querySelectorAll("#edbox [data-d]").forEach(function(b){b.addEventListener("click",function(){
+  var v=parseT(edin.value);if(v===null)return;edin.value=fmt(Math.max(1,v+(+b.dataset.d)));});});
+function saveEd(){
+  var v=parseT(edin.value);if(v===null){edin.style.outline="2px solid #c62828";return;}
+  var r=rows[edId];if(!r.o)r.o=blank();
+  if(r.o[edI]==null)r.o[edI]=r.t[edI];
+  r.t[edI]=v;if(r.o[edI]===v)r.o[edI]=null;save();render();closeEd();}
+document.getElementById("edok").addEventListener("click",saveEd);
+edin.addEventListener("keydown",function(e){if(e.key==="Enter")saveEd();});
+document.getElementById("edrev").addEventListener("click",function(){var r=rows[edId];if(r.o&&r.o[edI]!=null){r.t[edI]=r.o[edI];r.o[edI]=null;save();render();}closeEd();});
+document.getElementById("edno").addEventListener("click",closeEd);
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeEd();closeR();document.getElementById("csvbox").classList.remove("open");}});
+function sortedRows(){return rows.slice(0,N).sort(function(a,b){var x=best(a),y=best(b);if(x===null&&y===null)return a.id-b.id;if(x===null)return 1;if(y===null)return -1;return x-y||a.id-b.id;});}
 function q(s){return '"'+String(s).replace(/"/g,'""')+'"';}
 document.getElementById("csv").addEventListener("click",function(){
-  var L=["Koht,Võistkond,Katse 1,Katse 2,Katse 3,Katse 4,Katse 5,Parim"];
+  var hd=["Koht","Võistkond"];for(var j=0;j<A;j++)hd.push("Katse "+(j+1));hd.push("Parim");var L=["Võistlus,"+q(ev.name),"Kuupäev,"+fmtDate(ev.date),"",hd.join(",")];
   sortedRows().forEach(function(r,n){var b=best(r);
-    L.push([n+1,q(r.name||"Võistkond "+(r.id+1))].concat(r.t.map(function(x){return x===null?"":fmt(x);})).concat([b===null?"":fmt(b)]).join(","));});
+    L.push([n+1,q(r.name||"Võistkond "+(r.id+1))].concat(r.t.slice(0,A).map(function(x){return x===null?"":fmt(x);})).concat([b===null?"":fmt(b)]).join(","));});
   var ta=document.getElementById("csvtxt");ta.value=L.join("\n");
   document.getElementById("csvbox").classList.add("open");ta.focus();ta.select();
 });
@@ -157,6 +266,41 @@ document.getElementById("csvcopy").addEventListener("click",function(){
   setTimeout(function(){b.textContent="Kopeeri";},1800);
 });
 document.getElementById("print").addEventListener("click",function(){try{window.print();}catch(e){}});
+var sel=document.getElementById("acount"),msg=document.getElementById("cfgmsg");
+for(var j=1;j<=MAXA;j++){var op=document.createElement("option");op.value=j;op.textContent=j;sel.appendChild(op);}
+sel.value=A;
+sel.addEventListener("change",function(){
+  var n=+sel.value;
+  if(n<A){var c=0,k;
+    rows.forEach(function(r){for(var j=n;j<A;j++)if(r.t[j]!==null)c++;});
+    for(k in running){if(+k.split("-")[1]>=n)c++;}
+    if(c>0){msg.textContent="Tulpades "+(n+1)+"–"+A+" on "+c+" tulemust või käimas katset. Kustuta need enne (× nupuga) või vali suurem arv.";sel.value=A;return;}}
+  A=n;msg.textContent="";try{localStorage.setItem(AKEY,String(A));}catch(e){}render();
+});
+var nin=document.getElementById("ncount-in");nin.value=N;
+function applyN(){
+  var n=parseInt(nin.value,10);
+  if(isNaN(n)||n<1||n>MAXN){msg.textContent="Võistlejate arv peab olema 1–"+MAXN+".";nin.value=N;return;}
+  if(n<N){var c=0,k;
+    for(var j=n;j<N;j++){var r=rows[j];if(r.name||r.t.some(function(x){return x!==null;}))c++;}
+    for(k in running){if(+k.split("-")[0]>=n)c++;}
+    if(c>0){msg.textContent="Ridadel "+(n+1)+"–"+N+" on "+c+" võistlejat andmetega. Kustuta need enne või vali suurem arv.";nin.value=N;return;}}
+  N=n;msg.textContent="";try{localStorage.setItem(NKEY,String(N));}catch(e){}render();}
+nin.addEventListener("change",applyN);
+nin.addEventListener("keydown",function(e){if(e.key==="Enter")applyN();});
+var EKEY="ajavott-v1-e",ev={name:"",date:null};
+try{var es=JSON.parse(localStorage.getItem(EKEY)||"null");if(es&&typeof es==="object"){ev.name=String(es.name||"");ev.date=es.date;}}catch(e){}
+if(ev.date==null){var td=new Date();ev.date=td.getFullYear()+"-"+String(td.getMonth()+1).padStart(2,"0")+"-"+String(td.getDate()).padStart(2,"0");}
+var enm=document.getElementById("evname"),edt=document.getElementById("evdate");
+enm.value=ev.name;edt.value=ev.date;
+function fmtDate(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?(m[3]+"."+m[2]+"."+m[1]):"";}
+function saveEv(){try{localStorage.setItem(EKEY,JSON.stringify(ev));}catch(e){}}
+function updEv(){document.getElementById("pname").textContent=ev.name||"Võistluse tulemuste kokkuvõte";document.getElementById("pdate").textContent=fmtDate(ev.date)?"Kuupäev: "+fmtDate(ev.date):"";}
+enm.addEventListener("input",function(){ev.name=enm.value;saveEv();updEv();});
+edt.addEventListener("input",function(){ev.date=edt.value;saveEv();updEv();});
+window.addEventListener("beforeprint",function(){var n=new Date(),p=function(x){return String(x).padStart(2,"0");};
+  document.getElementById("ptime").textContent="Prinditud: "+p(n.getDate())+"."+p(n.getMonth()+1)+"."+n.getFullYear()+" "+p(n.getHours())+":"+p(n.getMinutes());});
+saveEv();updEv();
 render();
 </script>
 </body>
