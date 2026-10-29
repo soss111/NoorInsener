@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vormel 1 mikromootoriga sõidukid – ajavõtt</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Racing+Sans+One&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:linear-gradient(180deg,#c4ebfb 0%,#58c0ee 40%,#1f8fcf 100%);--card:#fff;--tx:#0b1620;--mut:#4a6275;--line:#cfe3f0;--acc:#0b1620;--onacc:#fff;--go:#0a7bbf;--best:#ffe45c;--besttx:#0b1620}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:linear-gradient(180deg,#0d3a5c 0%,#0a2a45 50%,#071c30 100%);--card:#102f4a;--tx:#eaf6ff;--mut:#9ec3dd;--line:#1f4a6b;--acc:#7fd3ff;--onacc:#0a2a45;--go:#7fd3ff;--best:#4a3f10;--besttx:#ffe45c}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;background:var(--bg);background-attachment:fixed;color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.chk{height:28px;background:repeating-conic-gradient(#000 0 25%,#fff 0 50%) 0 0/28px 28px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:16px 20px}
+h1{font:400 clamp(28px,6vw,56px)/1 "Racing Sans One",Impact,"Arial Black",sans-serif;text-transform:uppercase;margin:6px 0 10px;color:var(--tx);text-shadow:2px 2px 0 rgba(255,255,255,.75)}
+.kick{display:inline-block;font:800 13px Orbitron,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-shadow:1px 1px 0 #0b1620,-1px -1px 0 #0b1620,1px -1px 0 #0b1620,-1px 1px 0 #0b1620}
+.when{font:600 15px Orbitron,system-ui,sans-serif;margin-bottom:4px}
+.when b{font:400 20px "Racing Sans One",Impact,sans-serif;letter-spacing:.04em}
+.sub{color:var(--tx);opacity:.8;font-size:13px}
+.wrap{margin:0 12px 24px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow-x:auto;max-height:72vh;box-shadow:0 6px 24px rgba(0,40,80,.25)}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:960px}
+th{position:sticky;top:0;background:var(--card);z-index:2;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);padding:10px 8px;border-bottom:1px solid var(--line)}
+td{padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.rank{width:40px;font-weight:700;color:var(--mut);text-align:center}
+tr.top1 .rank{color:var(--acc)}
+input.name{width:100%;min-width:150px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:transparent;color:inherit;font:inherit}
+input.name:focus{outline:2px solid var(--acc);outline-offset:-1px}
+.cell{display:flex;align-items:center;gap:4px;min-width:140px}
+button{font:inherit;cursor:pointer;border-radius:7px;border:1px solid var(--line);background:transparent;color:inherit;padding:6px 10px}
+button:hover{border-color:var(--mut)}
+.b{width:100%;font-variant-numeric:tabular-nums}
+.b.start{color:var(--go);border-color:var(--go);font-weight:600}
+.b.run{background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:700}
+.tm{font-variant-numeric:tabular-nums;font-weight:600;padding:4px 6px;border-radius:6px;flex:1}
+.tm.isbest{background:var(--best);color:var(--besttx,#7a5a00)}
+.x{padding:2px 7px;color:var(--mut);border:0}
+.bestc{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.reset{color:var(--acc);border-color:var(--acc)}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tools button{background:var(--card)}
+.cf{display:flex;gap:4px;width:100%}
+.cf button{flex:1;font-size:12px;padding:6px 4px}
+.yes{background:#c62828!important;border-color:#c62828!important;color:#fff!important}
+.yes:disabled{opacity:.4;cursor:not-allowed}
+#rstbox{display:none;position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px}
+#rstbox.open{display:flex}
+#rstbox .p{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;width:min(440px,100%)}
+#rstbox p{margin:8px 0}
+#rstin{width:100%;margin:6px 0 12px;padding:8px;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;font:inherit}
+th,.rank,.bestc,.tm,.b{font-family:Orbitron,system-ui,sans-serif}
+th{font-size:11px;font-weight:700}
+.tm,.b{font-size:13px}
+.rank{font-weight:800}
+tr.top1 td{background:rgba(255,228,92,.28)}
+.foot{margin:0 12px 16px;padding:10px 16px;background:var(--card);border-radius:12px;font:700 12px Orbitron,system-ui,sans-serif;text-align:center}
+#csvbox{display:none;position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px}
+#csvbox.open{display:flex}
+#csvbox .p{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;width:min(720px,100%)}
+#csvbox textarea{width:100%;height:50vh;margin:10px 0;background:transparent;color:inherit;border:1px solid var(--line);border-radius:8px;padding:8px;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace}
+@media print{.tools,.x,.b.start,#csvbox{display:none!important}.wrap{max-height:none;overflow:visible;border:0}th{position:static}input.name{border:0;padding:0}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div class="chk"></div>
+<header>
+  <div class="hd"><div class="kick">Osale noorte festivalil</div><h1>Vormel 1<br>mikromootoriga sõidukid</h1><div class="when">toimub <b>29.10.2026</b> Tallinna Tehnikakõrgkoolis</div><div class="sub">Ajavõtt · 40 võistkonda · 5 katset · Loomine, ehitamine, võistlemine!</div></div>
+  <div class="tools"><button id="csv">Ekspordi CSV</button><button id="print">Prindi</button><button class="reset" id="reset">Nulli kõik</button></div>
+</header>
+<div class="wrap"><table>
+<thead><tr><th>#</th><th>Võistkond</th><th>Katse 1</th><th>Katse 2</th><th>Katse 3</th><th>Katse 4</th><th>Katse 5</th><th>Parim</th></tr></thead>
+<tbody id="tb"></tbody></table></div>
+<div class="foot">Projekt „Insenerikarjäär algab huvist“ · Eesti Tehnoloogiakasvatuse Liit · tehnoloogia.ee/fni5</div>
+<div class="chk"></div>
+<div id="rstbox"><div class="p"><strong>Nulli kõik andmed?</strong><p id="rstinfo" class="sub"></p><p>See kustutab kõik võistkondade nimed ja kõik ajad. Tegevust ei saa tagasi võtta.</p><div class="tools"><button id="rstcsv">Ekspordi CSV enne</button></div><label class="sub" for="rstin">Kinnitamiseks kirjuta NULLI</label><input id="rstin" autocomplete="off" placeholder="NULLI"><div class="tools"><button id="rstok" class="yes" disabled>Nulli kõik</button><button id="rstno">Tühista</button></div></div></div>
+<div id="csvbox"><div class="p"><strong>CSV eksport</strong><div class="sub">Kopeeri ja kleebi Excelisse või Google Sheetsi (sorteeritud parima aja järgi)</div><textarea id="csvtxt" readonly></textarea><div class="tools"><button id="csvcopy">Kopeeri</button><button id="csvclose">Sulge</button></div></div></div>
+<script>
+var N=40,A=5,KEY="ajavott-v1";
+var rows=[],running={},confirming={};
+for(var i=0;i<N;i++)rows.push({id:i,name:"",t:[null,null,null,null,null]});
+try{var s=localStorage.getItem(KEY);if(s){var d=JSON.parse(s);if(Array.isArray(d)&&d.length===N)rows=d;}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(rows));}catch(e){}}
+function fmt(ms){var m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000),r=Math.floor(ms%1000);
+return m+":"+String(s).padStart(2,"0")+"."+String(r).padStart(3,"0");}
+function best(r){var v=r.t.filter(function(x){return x!==null;});return v.length?Math.min.apply(null,v):null;}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+function render(){
+  var sorted=rows.slice().sort(function(a,b){var x=best(a),y=best(b);
+    if(x===null&&y===null)return a.id-b.id;if(x===null)return 1;if(y===null)return -1;return x-y||a.id-b.id;});
+  var h="";
+  sorted.forEach(function(r,n){
+    var b=best(r);
+    h+='<tr data-id="'+r.id+'"'+(n===0&&b!==null?' class="top1"':'')+'><td class="rank">'+(n+1)+'</td>'+
+    '<td><input class="name" value="'+esc(r.name)+'" placeholder="Võistkond '+(r.id+1)+'" maxlength="40"></td>';
+    for(var i=0;i<A;i++){
+      var k=r.id+"-"+i,c="";
+      if(running[k])c='<button class="b run" data-act="stop" data-i="'+i+'"><span data-key="'+k+'">0:00.000</span> ■</button>';
+      else if(confirming[k])c='<div class="cf"><button class="yes" data-act="clrok" data-i="'+i+'">Kustuta?</button><button data-act="clrno" data-i="'+i+'">Ei</button></div>';
+      else if(r.t[i]!==null)c='<span class="tm'+(r.t[i]===b?' isbest':'')+'">'+fmt(r.t[i])+'</span><button class="x" data-act="clr" data-i="'+i+'" title="Kustuta">×</button>';
+      else c='<button class="b start" data-act="start" data-i="'+i+'">▶ Start</button>';
+      h+='<td><div class="cell">'+c+'</div></td>';
+    }
+    h+='<td class="bestc">'+(b!==null?fmt(b):"–")+'</td></tr>';
+  });
+  var ae=document.activeElement,fid=null,fs=0;
+  if(ae&&ae.classList&&ae.classList.contains("name")){fid=ae.closest("tr").dataset.id;fs=ae.selectionStart;}
+  document.getElementById("tb").innerHTML=h;
+  if(fid!==null){var ni=document.querySelector('tr[data-id="'+fid+'"] input.name');if(ni){ni.focus();try{ni.setSelectionRange(fs,fs);}catch(e){}}}
+}
+var tb=document.getElementById("tb");
+tb.addEventListener("click",function(e){
+  var btn=e.target.closest("button[data-act]");if(!btn)return;
+  var id=+btn.closest("tr").dataset.id,i=+btn.dataset.i,k=id+"-"+i,act=btn.dataset.act;
+  if(act==="start"){running[k]=Date.now();render();}
+  else if(act==="stop"){rows[id].t[i]=Date.now()-running[k];delete running[k];save();render();}
+  else if(act==="clr"){confirming[k]=true;render();setTimeout(function(){if(confirming[k]){delete confirming[k];render();}},4000);}
+  else if(act==="clrok"){delete confirming[k];rows[id].t[i]=null;save();render();}
+  else if(act==="clrno"){delete confirming[k];render();}
+});
+tb.addEventListener("input",function(e){
+  if(!e.target.classList.contains("name"))return;
+  rows[+e.target.closest("tr").dataset.id].name=e.target.value;save();
+});
+setInterval(function(){
+  for(var k in running){var el=document.querySelector('[data-key="'+k+'"]');if(el)el.textContent=fmt(Date.now()-running[k]);}
+},40);
+var rb=document.getElementById("reset"),rbox=document.getElementById("rstbox"),rin=document.getElementById("rstin"),rok=document.getElementById("rstok");
+function closeR(){rbox.classList.remove("open");}
+rb.addEventListener("click",function(){
+  var n=0;rows.forEach(function(r){r.t.forEach(function(x){if(x!==null)n++;});});
+  document.getElementById("rstinfo").textContent="Praegu on salvestatud "+n+" aega.";
+  rin.value="";rok.disabled=true;rbox.classList.add("open");rin.focus();
+});
+rin.addEventListener("input",function(){rok.disabled=rin.value.trim().toUpperCase()!=="NULLI";});
+rok.addEventListener("click",function(){
+  if(rok.disabled)return;
+  rows.forEach(function(r){r.name="";r.t=[null,null,null,null,null];});running={};confirming={};save();render();closeR();
+});
+document.getElementById("rstno").addEventListener("click",closeR);
+document.getElementById("rstcsv").addEventListener("click",function(){closeR();document.getElementById("csv").click();});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeR();document.getElementById("csvbox").classList.remove("open");}});
+function sortedRows(){return rows.slice().sort(function(a,b){var x=best(a),y=best(b);if(x===null&&y===null)return a.id-b.id;if(x===null)return 1;if(y===null)return -1;return x-y||a.id-b.id;});}
+function q(s){return '"'+String(s).replace(/"/g,'""')+'"';}
+document.getElementById("csv").addEventListener("click",function(){
+  var L=["Koht,Võistkond,Katse 1,Katse 2,Katse 3,Katse 4,Katse 5,Parim"];
+  sortedRows().forEach(function(r,n){var b=best(r);
+    L.push([n+1,q(r.name||"Võistkond "+(r.id+1))].concat(r.t.map(function(x){return x===null?"":fmt(x);})).concat([b===null?"":fmt(b)]).join(","));});
+  var ta=document.getElementById("csvtxt");ta.value=L.join("\n");
+  document.getElementById("csvbox").classList.add("open");ta.focus();ta.select();
+});
+document.getElementById("csvclose").addEventListener("click",function(){document.getElementById("csvbox").classList.remove("open");});
+document.getElementById("csvcopy").addEventListener("click",function(){
+  var ta=document.getElementById("csvtxt"),b=this;ta.select();
+  try{document.execCommand("copy");b.textContent="Kopeeritud ✓";}catch(e){b.textContent="Vajuta Ctrl+C";}
+  setTimeout(function(){b.textContent="Kopeeri";},1800);
+});
+document.getElementById("print").addEventListener("click",function(){try{window.print();}catch(e){}});
+render();
+</script>
+</body>
+</html>
